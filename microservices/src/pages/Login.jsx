@@ -31,13 +31,23 @@ function Login() {
         },
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log("here!!");
-
 
       const jwtToken = response.data.token;
       localStorage.setItem("jwtToken", jwtToken);
 
       toast.success("LOGIN SUCCESSFULL!!");
+
+      await axios.post(
+        `${apiGatewayUrl}/notifications`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       navigate("/dashboard", { replace: true });
     } catch (error) {
       toast.error("LOGIN FAILED!!");

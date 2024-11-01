@@ -3,6 +3,8 @@ const transporter = require("../config/mailConfig");
 exports.sendLoginNotification = async (req, res) => {
   const { email, name } = req.body;
 
+  console.log("in e-mail", req.body);
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
