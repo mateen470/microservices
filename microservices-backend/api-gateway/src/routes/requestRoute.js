@@ -4,6 +4,14 @@ const authMiddleware = require("../middleware/authenticationMiddleware");
 
 const router = express.Router();
 
-router.use("/", authMiddleware, proxy("http://localhost:4002"));
+router.use(
+  "/create",
+  authMiddleware,
+  proxy(`${process.env.REQUEST_SERVICE_URL}/create`, {
+    proxyReqPathResolver: (req) => {
+      return "/create";
+    },
+  })
+);
 
 module.exports = router;

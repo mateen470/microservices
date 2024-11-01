@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Button from "../components/Button";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FormContainer = styled.div`
   display: flex;
@@ -27,8 +30,42 @@ function RequestForm() {
   const [urgency, setUrgency] = useState("");
   const [superiorEmail, setSuperiorEmail] = useState("");
 
-  const handleSubmit = (e) => {
+  const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const requestData = {
+      title,
+      description,
+      type,
+      urgency,
+      superiorEmail,
+    };
+
+    try {
+      await axios.post(`${apiGatewayUrl}/requests/create`, requestData, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const requestEmail = await axios.post(
+        `${apiGatewayUrl}/notifications/request`,
+        { requestData },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success(requestEmail.data.message);
+    } catch (error) {
+      toast.error("AN ERROR OCCURRED IN CREATING THE REQUEST!!");
+    }
   };
 
   return (

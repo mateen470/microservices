@@ -3,7 +3,6 @@ const { googleLogin } = require("../controller/authController");
 
 const router = express.Router();
 
-router.post("/", googleLogin);
+router.post("/login", googleLogin);
 
 module.exports = router;
-

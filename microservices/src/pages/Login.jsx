@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
+import LoadingSpinner from "../components/LoadingSpinner";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "@emotion/styled";
 
@@ -17,15 +18,17 @@ const LoginContainer = styled.div`
 
 function Login() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   const handleLoginSuccess = async (credentialResponse) => {
+    setLoading(true);
     try {
       const googleToken = credentialResponse.credential;
       const response = await axios.post(
-        `${apiGatewayUrl}/auth`,
+        `${apiGatewayUrl}/auth/login`,
         {
           token: googleToken,
         },
@@ -35,10 +38,10 @@ function Login() {
       const jwtToken = response.data.token;
       localStorage.setItem("jwtToken", jwtToken);
 
-      toast.success("LOGIN SUCCESSFULL!!");
+      toast.success(response.data.message);
 
       await axios.post(
-        `${apiGatewayUrl}/notifications`,
+        `${apiGatewayUrl}/notifications/login`,
         {},
         {
           headers: {
@@ -47,10 +50,11 @@ function Login() {
           },
         }
       );
-
       navigate("/dashboard", { replace: true });
     } catch (error) {
-      toast.error("LOGIN FAILED!!");
+      toast.error("LOGIN FAILED PLEASE TRY AGAIN!!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,15 +64,18 @@ function Login() {
 
   return (
     <LoginContainer>
-      <ToastContainer />
       <GoogleOAuthProvider clientId={googleClientId}>
-        <div>
-          <h2>Welcome! Please log in.</h2>
-          <GoogleLogin
-            onSuccess={handleLoginSuccess}
-            onError={handleLoginFailure}
-          />
-        </div>
+        {loading ? (
+          <LoadingSpinner size={"10vh"} />
+        ) : (
+          <div>
+            <h2>Welcome! Please log in.</h2>
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={handleLoginFailure}
+            />
+          </div>
+        )}
       </GoogleOAuthProvider>
     </LoginContainer>
   );

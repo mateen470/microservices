@@ -4,8 +4,6 @@ const client = require("../config/googleAuthClient");
 exports.googleLogin = async (req, res) => {
   const { token } = req.body;
 
-  console.log(JSON.stringify(token));
-
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -21,9 +19,8 @@ exports.googleLogin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ token: jwtToken });
+    res.status(200).json({ token: jwtToken, message: "LOGIN SUCCESSFULL!!" });
   } catch (error) {
-    console.error("ERROR VALIDATING GOOGLE TOKEN!! :", error);
     res.status(401).json({ message: "INVALID GOOGLE TOKEN!!" });
   }
 };
