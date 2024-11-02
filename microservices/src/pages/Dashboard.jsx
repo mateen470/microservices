@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import UserRequestContainer from "../components/UserRequestContainer";
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ function Dashboard() {
     <DashboardContainer>
       <h2>Dashboard</h2>
       <DashboardButton to="/request">Create New Request</DashboardButton>
-      <DashboardButton to="/approvals">View Approvals</DashboardButton>
+      <UserRequestContainer />
     </DashboardContainer>
   );
 }

@@ -52,14 +52,13 @@ function Login() {
       );
       navigate("/dashboard", { replace: true });
     } catch (error) {
-      toast.error("LOGIN FAILED PLEASE TRY AGAIN!!");
     } finally {
       setLoading(false);
     }
   };
 
   const handleLoginFailure = () => {
-    toast.error("LOGIN FAILED!!");
+    toast.error("LOGIN FAILED PLEASE TRY AGAIN!!");
   };
 
   return (

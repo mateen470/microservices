@@ -21,6 +21,6 @@ exports.googleLogin = async (req, res) => {
 
     res.status(200).json({ token: jwtToken, message: "LOGIN SUCCESSFULL!!" });
   } catch (error) {
-    res.status(401).json({ message: "INVALID GOOGLE TOKEN!!" });
+    res.status(401).send(error.message || error);
   }
 };

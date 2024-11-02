@@ -13,5 +13,14 @@ router.use(
     },
   })
 );
+router.use(
+  "/get-user-requests",
+  authMiddleware,
+  proxy(`${process.env.REQUEST_SERVICE_URL}/get-user-requests`, {
+    proxyReqPathResolver: (req) => {
+      return "/get-user-requests";
+    },
+  })
+);
 
 module.exports = router;

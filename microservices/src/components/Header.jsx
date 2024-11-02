@@ -48,7 +48,7 @@ function Header() {
       localStorage.removeItem("jwtToken");
       navigate("/");
     } catch (error) {
-      toast.error("LOGOUT FAILED!! PLEASE TRY AGAIN!!");
+      console.error("LOGOUT FAILED!! PLEASE TRY AGAIN!!");
     }
   };
 

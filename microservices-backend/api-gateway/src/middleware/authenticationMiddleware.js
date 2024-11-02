@@ -7,6 +7,7 @@ module.exports = function (req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     req.body = {
       ...req.body,
       email: decoded.email,
@@ -14,6 +15,6 @@ module.exports = function (req, res, next) {
     };
     next();
   } catch (error) {
-    res.status(400).send();
+    res.status(400).send(error.message || error);
   }
 };
