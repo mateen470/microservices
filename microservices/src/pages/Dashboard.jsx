@@ -1,7 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import UserRequestContainer from "../components/UserRequestContainer";
+import RequestsContainer from "../components/RequestsContainer";
+function Dashboard() {
+  return (
+    <DashboardContainer>
+      <h2>Dashboard</h2>
+      <DashboardButton to="/request">Create New Request</DashboardButton>
+      <RequestsContainer />
+    </DashboardContainer>
+  );
+}
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -19,15 +28,5 @@ const DashboardButton = styled(Link)`
   text-align: center;
   font-size: 16px;
 `;
-
-function Dashboard() {
-  return (
-    <DashboardContainer>
-      <h2>Dashboard</h2>
-      <DashboardButton to="/request">Create New Request</DashboardButton>
-      <UserRequestContainer />
-    </DashboardContainer>
-  );
-}
 
 export default Dashboard;

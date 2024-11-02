@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.use(
   "/login",
-  proxy(`${process.env.SSO_AUTH_SERVICE_URL}/login`, {
+  proxy(`${process.env.SSO_AUTH_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/login";
     },

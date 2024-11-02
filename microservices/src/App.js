@@ -1,29 +1,32 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import GlobalStyles from "./styles/GlobalStyles";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import RequestForm from "./pages/RequestForm";
 import ApprovalDashboard from "./pages/ApprovalDashboard";
+import RequestDetailPage from "./pages/RequestDetailPage";
 import Header from "./components/Header";
 import { RouteProtector } from "./utilities/RouteProtector";
+import { UserProvider } from "./utilities/Context";
 
 function App() {
   return (
-    <Router>
-      <GlobalStyles />
-      <ToastContainer />
-      <Header />
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route element={<RouteProtector />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/request" element={<RequestForm />} />
-          <Route path="/approvals" element={<ApprovalDashboard />} />
-        </Route>
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <GlobalStyles />
+        <Header />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route element={<RouteProtector />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/request" element={<RequestForm />} />
+            <Route path="/approvals" element={<ApprovalDashboard />} />
+            <Route path="/request-page/:id" element={<RequestDetailPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 

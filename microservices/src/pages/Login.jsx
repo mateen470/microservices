@@ -1,24 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { UserContext } from "../utilities/Context";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
-import "react-toastify/dist/ReactToastify.css";
 import styled from "@emotion/styled";
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-`;
-
 function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { dispatch } = useContext(UserContext);
 
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -38,7 +29,16 @@ function Login() {
       const jwtToken = response.data.token;
       localStorage.setItem("jwtToken", jwtToken);
 
-      toast.success(response.data.message);
+      const decoded = jwtDecode(jwtToken);
+      dispatch({
+        type: "SET_USER",
+        payload: { name: decoded.name, email: decoded.email },
+      });
+
+      const adminEmail = process.env.REACT_APP_ADMIN_ID;
+      if (decoded.email === adminEmail) {
+        dispatch({ type: "SET_ADMIN", payload: true });
+      }
 
       await axios.post(
         `${apiGatewayUrl}/notifications/login`,
@@ -52,13 +52,14 @@ function Login() {
       );
       navigate("/dashboard", { replace: true });
     } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleLoginFailure = () => {
-    toast.error("LOGIN FAILED PLEASE TRY AGAIN!!");
+    console.error("LOGIN FAILED PLEASE TRY AGAIN!!");
   };
 
   return (
@@ -79,5 +80,14 @@ function Login() {
     </LoginContainer>
   );
 }
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+`;
 
 export default Login;

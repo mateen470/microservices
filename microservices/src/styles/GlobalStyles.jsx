@@ -9,7 +9,7 @@ const GlobalStyles = () => (
         box-sizing: border-box;
       }
       body {
-        font-family: Arial, sans-serif;
+        font-family: Poppins, sans-serif;
         background-color: #f5f5f5;
       }
       a {

@@ -36,5 +36,37 @@ const getUserRequests = async (req, res) => {
     res.status(500).send(error.message || error);
   }
 };
+const getSpecificRequest = async (req, res) => {
+  try {
+    const request = await Request.find({ _id: req.params.id });
+    res.status(200).json(request);
+  } catch (error) {
+    res.status(500).send(error.message || error);
+  }
+};
+const getPendingRequests = async (req, res) => {
+  try {
+    const pendingRequests = await Request.find({ status: "pending" });
+    res.status(200).json(pendingRequests);
+  } catch (error) {
+    res.status(500).send(error.message || error);
+  }
+};
+const updateRequestStatus = async (req, res) => {
+  try {
+    const updatedRequest = await Request.findByIdAndUpdate(req.params.id, {
+      status: req.body.status,
+    });
+    res.status(200).send();
+  } catch (error) {
+    res.status(500).send(error.message || error);
+  }
+};
 
-module.exports = { createRequest, getUserRequests };
+module.exports = {
+  createRequest,
+  getUserRequests,
+  getSpecificRequest,
+  getPendingRequests,
+  updateRequestStatus,
+};

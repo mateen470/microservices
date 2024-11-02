@@ -1,31 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Button from "./Button";
-import { toast } from "react-toastify";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import { UserContext } from "../utilities/Context";
 import styled from "@emotion/styled";
-
-const HeaderContainer = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-`;
-
-const UserInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 function Header() {
+  const { user, dispatch } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
 
   const handleLogout = async () => {
     try {
@@ -41,11 +24,9 @@ function Header() {
             },
           }
         );
-        setUserName("");
-        setUserEmail("");
-        toast.success("LOGOUT SUCCESSFUL!!");
       }
       localStorage.removeItem("jwtToken");
+      dispatch({ type: "LOGOUT" });
       navigate("/");
     } catch (error) {
       console.error("LOGOUT FAILED!! PLEASE TRY AGAIN!!");
@@ -53,28 +34,18 @@ function Header() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUserName(decoded.name);
-        setUserEmail(decoded.email);
-        if (location.pathname === "/") {
-          navigate("/dashboard");
-        }
-      } catch (error) {
-        console.log("INVALID TOKEN!!");
-      }
+    if (user !== null && location.pathname === "/") {
+      navigate("/dashboard");
     }
-  }, [navigate, location.pathname]);
+  }, [navigate, location.pathname, user]);
 
   return (
     <>
-      {userEmail && (
+      {user && (
         <HeaderContainer>
           <UserInfo>
-            <span>{userName}</span>
-            <span>{userEmail}</span>
+            <span>{user.name}</span>
+            <span>{user.email}</span>
           </UserInfo>
           <Button onClick={handleLogout}>Logout</Button>
         </HeaderContainer>
@@ -82,5 +53,19 @@ function Header() {
     </>
   );
 }
+
+const HeaderContainer = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default Header;

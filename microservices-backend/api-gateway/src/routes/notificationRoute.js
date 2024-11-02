@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(
   "/login",
   authMiddleware,
-  proxy(`${process.env.NOTIFICATION_SERVICE_URL}/login`, {
+  proxy(`${process.env.NOTIFICATION_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/login";
     },
@@ -16,7 +16,7 @@ router.use(
 router.use(
   "/request",
   authMiddleware,
-  proxy(`${process.env.NOTIFICATION_SERVICE_URL}/request`, {
+  proxy(`${process.env.NOTIFICATION_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/request";
     },
@@ -25,7 +25,7 @@ router.use(
 router.use(
   "/logout",
   authMiddleware,
-  proxy(`${process.env.NOTIFICATION_SERVICE_URL}/logout`, {
+  proxy(`${process.env.NOTIFICATION_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/logout";
     },

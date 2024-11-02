@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(
   "/create",
   authMiddleware,
-  proxy(`${process.env.REQUEST_SERVICE_URL}/create`, {
+  proxy(`${process.env.REQUEST_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/create";
     },
@@ -16,9 +16,36 @@ router.use(
 router.use(
   "/get-user-requests",
   authMiddleware,
-  proxy(`${process.env.REQUEST_SERVICE_URL}/get-user-requests`, {
+  proxy(`${process.env.REQUEST_SERVICE_URL}`, {
     proxyReqPathResolver: (req) => {
       return "/get-user-requests";
+    },
+  })
+);
+router.use(
+  "/get-specific-request/:id",
+  authMiddleware,
+  proxy(`${process.env.REQUEST_SERVICE_URL}`, {
+    proxyReqPathResolver: (req) => {
+      return `/get-specific-request/${req.params.id}`;
+    },
+  })
+);
+router.use(
+  "/get-pending-requests",
+  authMiddleware,
+  proxy(`${process.env.REQUEST_SERVICE_URL}`, {
+    proxyReqPathResolver: (req) => {
+      return "/get-pending-requests";
+    },
+  })
+);
+router.use(
+  "/update-specific-request/:id",
+  authMiddleware,
+  proxy(`${process.env.REQUEST_SERVICE_URL}`, {
+    proxyReqPathResolver: (req) => {
+      return `/update-specific-request/${req.params.id}`;
     },
   })
 );

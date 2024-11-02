@@ -1,6 +1,5 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
 
 const isTokenValid = (token) => {
   try {
@@ -17,7 +16,7 @@ axios.interceptors.request.use(
     if (token) {
       if (!isTokenValid(token)) {
         localStorage.removeItem("jwtToken");
-        toast.error("YOUR SESSION HAS EXPIRED PLEASE LOGIN AGAIN!!");
+        alert("YOUR SESSION HAS EXPIRED PLEASE LOGIN AGAIN!!");
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);

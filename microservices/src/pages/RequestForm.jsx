@@ -2,27 +2,6 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Button from "../components/Button";
 import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const Input = styled.input`
-  margin: 10px 0;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`;
-
 function RequestForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -51,7 +30,7 @@ function RequestForm() {
           "Content-Type": "application/json",
         },
       });
-      const requestEmail = await axios.post(
+      await axios.post(
         `${apiGatewayUrl}/notifications/request`,
         { requestData },
         {
@@ -61,10 +40,8 @@ function RequestForm() {
           },
         }
       );
-
-      toast.success(requestEmail.data.message);
     } catch (error) {
-      toast.error("AN ERROR OCCURRED IN CREATING THE REQUEST!!");
+      console.error("AN ERROR OCCURRED IN CREATING THE REQUEST!!");
     }
   };
 
@@ -110,5 +87,23 @@ function RequestForm() {
     </FormContainer>
   );
 }
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const Input = styled.input`
+  margin: 10px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+`;
 
 export default RequestForm;

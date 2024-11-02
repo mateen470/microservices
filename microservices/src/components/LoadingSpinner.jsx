@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import React from "react";
 
+const LoadingSpinner = ({ size }) => <Spinner size={size} />;
+
 const Spinner = styled.div`
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3498db;
@@ -18,7 +20,5 @@ const Spinner = styled.div`
     }
   }
 `;
-
-const LoadingSpinner = ({ size }) => <Spinner size={size} />;
 
 export default LoadingSpinner;
