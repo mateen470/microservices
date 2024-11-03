@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import { UserContext } from "../utilities/Context";
 import RequestsContainer from "../components/RequestsContainer";
 function Dashboard() {
+  const { isAdmin } = useContext(UserContext);
+
   return (
     <DashboardContainer>
       <h2>Dashboard</h2>
-      <DashboardButton to="/request">Create New Request</DashboardButton>
+      {isAdmin ? (
+        ""
+      ) : (
+        <DashboardButton to="/request">Create New Request</DashboardButton>
+      )}
       <RequestsContainer />
     </DashboardContainer>
   );

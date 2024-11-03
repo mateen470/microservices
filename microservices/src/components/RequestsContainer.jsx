@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { UserContext } from "../utilities/Context";
 function RequestsContainer() {
   const [requests, setRequests] = useState([]);
   const navigate = useNavigate();
+  const { isAdmin } = useContext(UserContext);
 
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
 
@@ -13,7 +15,9 @@ function RequestsContainer() {
       try {
         const token = localStorage.getItem("jwtToken");
         const response = await axios.get(
-          `${apiGatewayUrl}/requests/get-user-requests`,
+          `${apiGatewayUrl}/requests/${
+            isAdmin ? "get-pending-requests" : "get-user-requests"
+          }`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -28,7 +32,7 @@ function RequestsContainer() {
     };
 
     fetchRequests();
-  }, [apiGatewayUrl]);
+  }, [apiGatewayUrl, isAdmin]);
 
   const handleRowClick = (id) => {
     navigate(`/request-page/${id}`);
@@ -36,7 +40,7 @@ function RequestsContainer() {
 
   return (
     <Container>
-      <h2>Your Requests</h2>
+      <h2>{isAdmin ? "Pending Requests" : "Your Requests"}</h2>
       <Table>
         <thead>
           <tr>
@@ -55,7 +59,7 @@ function RequestsContainer() {
                   onClick={() => handleRowClick(request._id)}
                   style={{ cursor: "pointer" }}
                 >
-                  View
+                  {isAdmin ? "Approve/Reject" : "View"}
                 </TableCell>
               </TableRow>
             ))

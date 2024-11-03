@@ -1,11 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { UserContext } from "../utilities/Context";
+
 function RequestDetailPage() {
   const { id } = useParams();
   const [request, setRequest] = useState(null);
+  const [newStatus, setNewStatus] = useState("Pending");
+  const { isAdmin } = useContext(UserContext);
+
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
+
+  const handleStatusUpdate = async () => {
+    try {
+      const token = localStorage.getItem("jwtToken");
+      await axios.put(
+        `${apiGatewayUrl}/requests/update-specific-request/${id}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setRequest((prevRequest) => ({ ...prevRequest, status: newStatus }));
+    } catch (error) {
+      console.error("FAILED TO UPDATE REQUEST STATUS!!");
+    }
+  };
 
   useEffect(() => {
     const fetchRequest = async () => {
@@ -50,6 +74,19 @@ function RequestDetailPage() {
       <Info>
         <strong>Status:</strong> {request?.status}
       </Info>
+      {isAdmin && (
+        <StatusUpdateContainer>
+          <select
+            value={newStatus}
+            onChange={(e) => setNewStatus(e.target.value)}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <button onClick={handleStatusUpdate}>Update Status</button>
+        </StatusUpdateContainer>
+      )}
     </Container>
   );
 }
@@ -70,6 +107,13 @@ const Title = styled.h2`
 const Info = styled.p`
   margin: 10px 0;
   line-height: 1.5;
+  word-wrap: break-word;
+`;
+const StatusUpdateContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 export default RequestDetailPage;

@@ -46,15 +46,15 @@ const getSpecificRequest = async (req, res) => {
 };
 const getPendingRequests = async (req, res) => {
   try {
-    const pendingRequests = await Request.find({ status: "pending" });
-    res.status(200).json(pendingRequests);
+    const pendingRequests = await Request.find({ status: "Pending" });
+    res.status(200).json({ requests: pendingRequests });
   } catch (error) {
     res.status(500).send(error.message || error);
   }
 };
 const updateRequestStatus = async (req, res) => {
   try {
-    const updatedRequest = await Request.findByIdAndUpdate(req.params.id, {
+    await Request.findByIdAndUpdate(req.params.id, {
       status: req.body.status,
     });
     res.status(200).send();
