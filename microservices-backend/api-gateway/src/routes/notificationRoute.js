@@ -23,6 +23,15 @@ router.use(
   })
 );
 router.use(
+  "/request-status",
+  authMiddleware,
+  proxy(`${process.env.NOTIFICATION_SERVICE_URL}`, {
+    proxyReqPathResolver: (req) => {
+      return "/request-status";
+    },
+  })
+);
+router.use(
   "/logout",
   authMiddleware,
   proxy(`${process.env.NOTIFICATION_SERVICE_URL}`, {

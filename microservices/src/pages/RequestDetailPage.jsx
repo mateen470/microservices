@@ -14,18 +14,28 @@ function RequestDetailPage() {
 
   const handleStatusUpdate = async () => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const jwtToken = localStorage.getItem("jwtToken");
       await axios.put(
         `${apiGatewayUrl}/requests/update-specific-request/${id}`,
         { status: newStatus },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${jwtToken}`,
             "Content-Type": "application/json",
           },
         }
       );
       setRequest((prevRequest) => ({ ...prevRequest, status: newStatus }));
+      await axios.post(
+        `${apiGatewayUrl}/notifications/request-status`,
+        { request },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
     } catch (error) {
       console.error("FAILED TO UPDATE REQUEST STATUS!!");
     }

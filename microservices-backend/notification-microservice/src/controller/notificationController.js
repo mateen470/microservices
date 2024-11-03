@@ -14,7 +14,7 @@ const sendLoginNotification = async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).send();
   } catch (error) {
-    res.status(500).json({ error: "FAIL TO SEND E-MAIL!!" });
+    res.status(500).send(error.message || error);
   }
 };
 const sendLogoutNotification = async (req, res) => {
@@ -31,10 +31,9 @@ const sendLogoutNotification = async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).send();
   } catch (error) {
-    res.status(500).json({ error: "FAIL TO SEND E-MAIL!!" });
+    res.status(500).send(error.message || error);
   }
 };
-
 const sendRequestNotification = async (req, res) => {
   const { email, name, requestData } = req.body;
 
@@ -55,11 +54,34 @@ const sendRequestNotification = async (req, res) => {
   try {
     await transporter.sendMail(mailOptionsToRequester);
     await transporter.sendMail(mailOptionsToSuperior);
-    res
-      .status(200)
-      .json({ message: "REQUEST NOTIFICATION SENT CHECK E-MAIL!!" });
+    res.status(200).send();
   } catch (error) {
-    res.status(500).json({ error: "FAILED TO SEND REQUEST NOTIFICATION!!" });
+    res.status(500).send(error.message || error);
+  }
+};
+const sendRequestStatusChangeNotification = async (req, res) => {
+  const { request } = req.body;
+
+  const mailOptionsToRequester = {
+    from: process.env.EMAIL_USER,
+    to: request.requestorEmail,
+    subject: "STATUS OF YOUR REQUEST HAS CHANGED!!",
+    text: `STATUS OF YOUR REQUEST HAS BEEN CHANGED BY ${request.superiorEmail}. THE REQUEST DETAILS :: ${request}`,
+  };
+
+  const mailOptionsToSuperior = {
+    from: process.env.EMAIL_USER,
+    to: request.superiorEmail,
+    subject: "STATUS OF REQUEST HAS BEEN CHANGED!!",
+    text: `YOU CHANGED THE STATUS OF THE REQUEST SUBMITTED BY ${request.requestorName} WITH E-MAIL ${request.requestorEmail}. THE REQUEST DATA :: ${request}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptionsToRequester);
+    await transporter.sendMail(mailOptionsToSuperior);
+    res.status(200).send();
+  } catch (error) {
+    res.status(500).send(error.message || error);
   }
 };
 
@@ -67,4 +89,5 @@ module.exports = {
   sendLoginNotification,
   sendLogoutNotification,
   sendRequestNotification,
+  sendRequestStatusChangeNotification,
 };
