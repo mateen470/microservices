@@ -4,7 +4,6 @@ import GlobalStyles from "./styles/GlobalStyles";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import RequestForm from "./pages/RequestForm";
-import ApprovalDashboard from "./pages/ApprovalDashboard";
 import RequestDetailPage from "./pages/RequestDetailPage";
 import Header from "./components/Header";
 import { RouteProtector } from "./utilities/RouteProtector";
@@ -21,7 +20,6 @@ function App() {
           <Route element={<RouteProtector />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/request" element={<RequestForm />} />
-            <Route path="/approvals" element={<ApprovalDashboard />} />
             <Route path="/request-page/:id" element={<RequestDetailPage />} />
           </Route>
         </Routes>

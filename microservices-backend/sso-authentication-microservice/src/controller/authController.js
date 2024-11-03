@@ -19,7 +19,7 @@ exports.googleLogin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({ token: jwtToken, message: "LOGIN SUCCESSFULL!!" });
+    res.status(200).json({ token: jwtToken });
   } catch (error) {
     res.status(401).send(error.message || error);
   }
