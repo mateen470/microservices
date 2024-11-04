@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 
+//THIS MIDDLEWARE CHECKS FOR THE TOKEN IN THE REQUEST'S HEADER
+//AND VERIFIES THE TOKEN
 module.exports = function (req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 

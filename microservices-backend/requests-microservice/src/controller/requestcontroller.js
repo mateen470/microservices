@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const Request = require("../model/schema");
 
 const createRequest = async (req, res) => {
+  //CREATES THE REQUEST BASED ON THE DATA COMING FROM FRONT-END
   try {
     const { title, description, type, urgency, superiorEmail, email, name } =
       req.body;
@@ -26,6 +27,7 @@ const createRequest = async (req, res) => {
   }
 };
 const getUserRequests = async (req, res) => {
+  //GETS ALL THE REQUESTS FOR THE CURRENT USER BASED ON THE JWT TOKEN
   try {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -37,6 +39,7 @@ const getUserRequests = async (req, res) => {
   }
 };
 const getSpecificRequest = async (req, res) => {
+  //GETS THE SPECIFIC REQUEST BASED ON THE ID PASSED IN THE URL
   try {
     const request = await Request.find({ _id: req.params.id });
     res.status(200).json(request);
@@ -45,6 +48,7 @@ const getSpecificRequest = async (req, res) => {
   }
 };
 const getPendingRequests = async (req, res) => {
+  //GETS ALL THE PENDING REQUESTS BASED ON THE STATUS FIELD IN THE REQUEST MODEL
   try {
     const pendingRequests = await Request.find({ status: "Pending" });
     res.status(200).json({ requests: pendingRequests });
@@ -53,6 +57,8 @@ const getPendingRequests = async (req, res) => {
   }
 };
 const updateRequestStatus = async (req, res) => {
+  //UPDATES THE STATUS OF THE REQUEST BASED ON THE ID PASSED IN THE URL 
+  //AND THE NEW STATUS PASSED IN THE BODY
   try {
     await Request.findByIdAndUpdate(req.params.id, {
       status: req.body.status,

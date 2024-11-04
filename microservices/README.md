@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+Project Name - microservices
+Overview
+This is the frontend application for the project, built with React. It provides user authentication through Google OAuth, request management, and a role-based dashboard (user and admin views). The application uses React Router for navigation and axios for API communication, with JWT authentication for secure access.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Prerequisites
+Node.js (v14 or above)
+yarn for package management
 
-## Available Scripts
+Installation
+Clone the repository:
 
-In the project directory, you can run:
+bash
+Copy code
+git clone https://github.com/your-repo.git
+cd your-repo
 
-### `npm start`
+Install dependencies:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+bash
+Copy code
+yarn install
+Environment Variables: Create a .env file in the root directory and add the following variables:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+env
+Copy code
+REACT_APP_API_GATEWAY_URL=http://localhost:4000
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+REACT_APP_ADMIN_ID=your-admin-email@example.com
 
-### `npm test`
+Folder Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+src/ - Main application source code
+components/ - Reusable components such as Button, Header, and LoadingSpinner
+pages/ - Each route's main components like Dashboard, Login, RequestForm, and RequestDetailPage
+utilities/ - Helper functions and Context API files such as Context.js, Interceptor.js, and RouteProtector.js
+App.js - Main application component with routing setup
+index.js - Entry point of the application
+Running the Application
 
-### `npm run build`
+To start the development server:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+bash
+Copy code
+yarn start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To build the application for production:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+bash
+Copy code
+yarn build
 
-### `npm run eject`
+Core Functionalities and Components
+Authentication
+Login with Google OAuth:
+The Login component uses react-oauth/google for Google OAuth.
+Successful login saves a JWT in localStorage, which is used for API requests.
+Dashboard and Role-Based Access
+User Dashboard: Displays the user's own requests.
+Admin Dashboard: Displays all pending requests for admins.
+Route Protection: The RouteProtector utility restricts access to routes, checking for a valid JWT.
+Header: The header includes a user avatar, a dropdown with user info, and a logout button.
+Components
+Button: Displays different icons based on the button type (logout, publish, request, update) and supports a loading spinner.
+RequestsContainer: Fetches and displays user or admin requests in a scrollable table format.
+RequestForm: Form for creating new requests with fields for title, description, type, urgency, and superior email.
+RequestDetailPage: Displays details of a specific request and allows the admin to update the request status.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+API Communication and Interceptors
+Axios Interceptors: In Interceptor.js, intercepts outgoing requests to:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Add JWT to headers.
+Check for token expiration and redirect to login if expired.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Environment Variables:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+REACT_APP_API_GATEWAY_URL: The API gateway URL for backend calls.
+REACT_APP_GOOGLE_CLIENT_ID: Google Client ID for OAuth.
+REACT_APP_ADMIN_ID: Email of the designated admin.
 
-## Learn More
+Notifications
+Email Notifications: Email notifications are triggered for login, request creation, and request status updates.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Development Workflow
+Code Standards
+Use camelCase for variable and function names.
+Follow the Airbnb JavaScript Style Guide for consistent code formatting.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Testing
+Manual Testing: The application relies on manual testing in the development environment.
 
-### Code Splitting
+Troubleshooting
+Session Expiration: If the session expires, the application will prompt the user to re-login via an interceptor check.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Login Issues: Ensure the Google Client ID and API Gateway URL are correct in the .env file if Google OAuth fails.

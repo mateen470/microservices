@@ -2,14 +2,13 @@ import React, { useState, useContext } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../utilities/Context";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import styled from "@emotion/styled";
 function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { dispatch } = useContext(UserContext);
+  const { loginUser } = useContext(UserContext);
 
   const apiGatewayUrl = process.env.REACT_APP_API_GATEWAY_URL;
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -17,6 +16,8 @@ function Login() {
   const handleLoginSuccess = async (credentialResponse) => {
     setLoading(true);
     try {
+      //BASED ON CLIENT_ID, A GOOGLE TOKEN IS PROVIDED TO API-CALL FOR VERIFICATION
+      //OF THAT GOOGLE TOKEN AND THEN BACKEND WOULD PROVIDE A JWT IN RETURN
       const googleToken = credentialResponse.credential;
       const response = await axios.post(
         `${apiGatewayUrl}/auth/login`,
@@ -27,19 +28,13 @@ function Login() {
       );
 
       const jwtToken = response.data.token;
-      localStorage.setItem("jwtToken", jwtToken);
+     
+      //AFTER RECIEVING THE JWT FROM BACKEND, IT IS SENT TO
+      //CONTEXT FUNCTION OF LOGIN USER O DECODE THE JWT TO GET EMAIL
+      //AND NAME OF CURRENT USER
+      loginUser(jwtToken);
 
-      const decoded = jwtDecode(jwtToken);
-      dispatch({
-        type: "SET_USER",
-        payload: { name: decoded.name, email: decoded.email },
-      });
-
-      const adminEmail = process.env.REACT_APP_ADMIN_ID;
-      if (decoded.email === adminEmail) {
-        dispatch({ type: "SET_ADMIN", payload: true });
-      }
-
+      // AFTER LOGIN, NOTIFICATION IS SENT TO THE USER EMAIL
       await axios.post(
         `${apiGatewayUrl}/notifications/login`,
         {},
@@ -68,13 +63,14 @@ function Login() {
         {loading ? (
           <LoadingSpinner size={"10vh"} />
         ) : (
-          <div>
-            <h2>Welcome! Please log in.</h2>
-            <GoogleLogin
-              onSuccess={handleLoginSuccess}
-              onError={handleLoginFailure}
-            />
-          </div>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
+            type="icon"
+            size="large"
+            shape="pill"
+            theme="filled_black"
+          />
         )}
       </GoogleOAuthProvider>
     </LoginContainer>

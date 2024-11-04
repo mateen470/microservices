@@ -5,7 +5,7 @@ const LoadingSpinner = ({ size }) => <Spinner size={size} />;
 
 const Spinner = styled.div`
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  border-top: 4px solid black;
   border-radius: 50%;
   width: ${(props) => props.size};
   height: ${(props) => props.size};

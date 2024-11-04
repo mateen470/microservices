@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export const UserContext = createContext();
 
@@ -27,9 +28,34 @@ const reducer = (state, action) => {
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const loginUser = (jwtToken) => {
+    const decoded = jwtDecode(jwtToken);
+    dispatch({
+      type: "SET_USER",
+      payload: { name: decoded.name, email: decoded.email },
+    });
+
+    const adminEmail = process.env.REACT_APP_ADMIN_ID;
+    if (decoded.email === adminEmail) {
+      dispatch({ type: "SET_ADMIN", payload: true });
+    }
+
+    localStorage.setItem("jwtToken", jwtToken);
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem("jwtToken");
+    dispatch({ type: "LOGOUT" });
+  };
+
   return (
     <UserContext.Provider
-      value={{ user: state.user, isAdmin: state.isAdmin, dispatch }}
+      value={{
+        user: state.user,
+        isAdmin: state.isAdmin,
+        loginUser,
+        logoutUser,
+      }}
     >
       {children}
     </UserContext.Provider>

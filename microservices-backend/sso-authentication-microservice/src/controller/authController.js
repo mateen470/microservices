@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const client = require("../config/googleAuthClient");
 
 exports.googleLogin = async (req, res) => {
+  //THIS FUNCTION RECEIVES GOOGLE TOKEN FROM FRONTEND AND VERIFIES IT
+  //IF VERIFICATION IS SUCCESSFUL, IT GENERATES AND SENDS JWT TO FRONTEND
   const { token } = req.body;
 
   try {

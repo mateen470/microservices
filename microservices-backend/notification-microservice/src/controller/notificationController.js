@@ -7,7 +7,12 @@ const sendLoginNotification = async (req, res) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "SUCCESSFUL LOGIN!!",
-    text: `GUTEN TAG! ${name} YOU HAVE SUCCESSFULLY LOGGED-IN!!`,
+    html: `
+    <div style="font-family: Poppins, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+      <h2 style="color: #4CAF50;">Guten Tag, ${name}!</h2>
+      <p style="font-size: 16px;">You have successfully logged in!</p>
+    </div>
+  `,
   };
 
   try {
@@ -24,7 +29,13 @@ const sendLogoutNotification = async (req, res) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "SUCCESSFUL LOGOUT!!",
-    text: `GUTEN TAG! ${name} YOU HAVE SUCCESSFULLY LOGGED-OUT!!`,
+    html: `
+    <div style="font-family: Poppins, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+      <h2 style="color: #4CAF50;">Guten Tag, ${name}!</h2>
+      <p style="font-size: 16px;">You have successfully logged out!</p>
+      <p style="font-size: 14px; color: #555;">We hope to see you back soon.</p>
+    </div>
+  `,
   };
 
   try {
@@ -41,14 +52,30 @@ const sendRequestNotification = async (req, res) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "NEW REQUEST SUBMITTED!!",
-    text: `YOU SENT A REQUEST TO ${requestData.superiorEmail} FOR APPROVAL. THE REQUEST DETAILS :: ${requestData}`,
+    html: `
+      <div style="font-family: Poppins, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+        <h2 style="color: #4CAF50;">Request Submitted Successfully</h2>
+        <p style="font-size: 16px;">You sent a request to <strong>${requestData.superiorEmail}</strong> for approval.</p>
+        <p style="font-size: 14px; color: #555;">Request Details:</p>
+        <pre style="background: #f8f8f8; padding: 10px; border-radius: 5px;"><p style="font-size: 14px; color: #555;">Request Title: <strong>${requestData.title}</strong></p>
+        <p style="font-size: 14px; color: #555;">Description: ${requestData.description}</p></pre>
+      </div>
+    `,
   };
 
   const mailOptionsToSuperior = {
     from: process.env.EMAIL_USER,
     to: requestData.superiorEmail,
     subject: "NEW REQUEST SUBMITTED BY YOUR TEAM MEMBER!!",
-    text: `A NEW REQUEST HAS BEEN SUBMITTED BY THE TEAM MEMBER ${name} WITH E-MAIL ${email}. APPROVE THE REQUEST BY VISITING THE DASHBOARD. THE REQUEST DATA :: ${requestData}`,
+    html: `
+      <div style="font-family: Poppins, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+        <h2 style="color: #4CAF50;">New Team Member Request</h2>
+        <p style="font-size: 16px;">A new request has been submitted by ${name} (<strong>${email}</strong>).</p>
+        <p style="font-size: 14px; color: #555;">Request Details:</p>
+        <pre style="background: #f8f8f8; padding: 10px; border-radius: 5px;"><p style="font-size: 14px; color: #555;">Request Title: <strong>${requestData.title}</strong></p>
+        <p style="font-size: 14px; color: #555;">Description: ${requestData.description}</p></pre>
+      </div>
+    `,
   };
 
   try {
@@ -66,14 +93,30 @@ const sendRequestStatusChangeNotification = async (req, res) => {
     from: process.env.EMAIL_USER,
     to: request.requestorEmail,
     subject: "STATUS OF YOUR REQUEST HAS CHANGED!!",
-    text: `STATUS OF YOUR REQUEST HAS BEEN CHANGED BY ${request.superiorEmail}. THE REQUEST DETAILS :: ${request}`,
+    html: `
+    <div style="font-family: Poppins, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+      <h2 style="color: #4CAF50;">Request Status Update</h2>
+      <p style="font-size: 16px;">The status of your request has been updated by <strong>${request.superiorEmail}</strong>.</p>
+      <p style="font-size: 14px; color: #555;">Request Details:</p>
+      <pre style="background: #f8f8f8; padding: 10px; border-radius: 5px;"><p style="font-size: 14px; color: #555;">Request Title: <strong>${request.title}</strong></p>
+        <p style="font-size: 14px; color: #555;">Description: ${request.description}</p></pre>
+    </div>
+  `,
   };
 
   const mailOptionsToSuperior = {
     from: process.env.EMAIL_USER,
     to: request.superiorEmail,
     subject: "STATUS OF REQUEST HAS BEEN CHANGED!!",
-    text: `YOU CHANGED THE STATUS OF THE REQUEST SUBMITTED BY ${request.requestorName} WITH E-MAIL ${request.requestorEmail}. THE REQUEST DATA :: ${request}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+        <h2 style="color: #FF5722;">Request Status Changed</h2>
+        <p style="font-size: 16px;">You updated the status of a request from <strong>${request.requestorName}</strong> (<strong>${request.requestorEmail}</strong>).</p>
+        <p style="font-size: 14px; color: #555;">Request Details:</p>
+        <pre style="background: #f8f8f8; padding: 10px; border-radius: 5px;"><p style="font-size: 14px; color: #555;">Request Title: <strong>${request.title}</strong></p>
+        <p style="font-size: 14px; color: #555;">Description: ${request.description}</p></pre>
+      </div>
+    `,
   };
 
   try {

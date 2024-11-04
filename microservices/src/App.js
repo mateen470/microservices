@@ -8,11 +8,13 @@ import RequestDetailPage from "./pages/RequestDetailPage";
 import Header from "./components/Header";
 import { RouteProtector } from "./utilities/RouteProtector";
 import { UserProvider } from "./utilities/Context";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <UserProvider>
       <Router>
+        <Toaster position="top-right" />
         <GlobalStyles />
         <Header />
         <Routes>

@@ -4,6 +4,8 @@ const authMiddleware = require("../middleware/authenticationMiddleware");
 
 const router = express.Router();
 
+//PROXIES ARE BEING USED TO REDIRECT THE REQUEST MADE TO API-GATEWAY TOWARDS THE
+//NOTIFICATION SERVICE
 router.use(
   "/login",
   authMiddleware,
