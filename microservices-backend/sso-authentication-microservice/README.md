@@ -26,7 +26,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/your-repo.git
+git clone https://github.com/mateen470/microservices.git
 cd your-repo/sso-auth-microservice
 
 Install dependencies:
